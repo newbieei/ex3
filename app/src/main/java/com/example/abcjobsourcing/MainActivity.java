@@ -2,12 +2,15 @@ package com.example.abcjobsourcing;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
@@ -43,23 +46,49 @@ public class MainActivity extends AppCompatActivity {
     btnSubmit.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            try {
 
-            role = roles.getSelectedItem().toString();
-            res1.setText(role);
+                // perform the operation
 
-            workHr = Integer.parseInt(hrs.getText().toString());
-            grossSalary = rate *workHr;
-            DecimalFormat df = new DecimalFormat("Php ###,###.00");
-            gross.setText("Gross Salary is: " +df.format(grossSalary));
+                role = roles.getSelectedItem().toString();
+                res1.setText(role);
 
-            dep = Integer.parseInt(dependents.getText().toString());
-            iTaxdeduction = (grossSalary-(grossSalary * .05 * dep))*.15;
-            memfee = (grossSalary * .13);
-            ssdeduc = (grossSalary * .0785);
-            deductions = iTaxdeduction+memfee+ssdeduc;
-            totnet = grossSalary-deductions;
-            DecimalFormat dff = new DecimalFormat("Php ###,###.00");
-            net.setText(("Net salary is: "+ dff.format(totnet)));
+                workHr = Integer.parseInt(hrs.getText().toString());
+                grossSalary = rate *workHr;
+                DecimalFormat df = new DecimalFormat("Php ###,###.00");
+                gross.setText("Gross Salary is: " +df.format(grossSalary));
+
+                dep = Integer.parseInt(dependents.getText().toString());
+                iTaxdeduction = (grossSalary-(grossSalary * .05 * dep))*.15;
+                memfee = (grossSalary * .13);
+                ssdeduc = (grossSalary * .0785);
+                deductions = iTaxdeduction+memfee+ssdeduc;
+                totnet = grossSalary-deductions;
+                DecimalFormat dff = new DecimalFormat("Php ###,###.00");
+                net.setText(("Net salary is: "+ dff.format(totnet)));
+
+                //to hide the keyboard when user began to input
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+            } catch (NumberFormatException e) {
+                // Get the context for the app
+                Context context = getApplicationContext();
+
+                // Set the duration for the toast
+                int duration = Toast.LENGTH_SHORT;
+
+                // Set the text for the toast
+                CharSequence text = "Please enter valid integers.";
+
+                // Create the toast object
+                Toast toast = Toast.makeText(context, text, duration);
+
+                // Show the toast
+                toast.show();
+            }
+
+
         }
     });
 
